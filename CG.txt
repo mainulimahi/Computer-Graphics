@@ -1,0 +1,90 @@
+#include<windows.h>
+#include<iostream>
+#include<math.h>
+#include <stdio.h>
+#include<GL/gl.h>
+#include <GL/glut.h>
+
+using namespace std;
+
+int x_centre, y_centre, r;
+
+void midPointCircleDraw(void)
+{
+	int x = r, y = 0;
+	glClear(GL_COLOR_BUFFER_BIT);
+    glBegin(GL_POINTS);
+
+	glVertex2d(x + x_centre, y + y_centre);
+
+	if (r > 0)
+	{
+		glVertex2d(x + x_centre, -y + y_centre);
+		glVertex2d(y + x_centre, x + y_centre);
+		glVertex2d(-y + x_centre, x + y_centre);
+	}
+	int P = 1 - r;
+	while (x > y)
+	{
+		y++;
+
+		if (P <= 0) {
+            P = P + 2*y + 1;
+		}
+		else
+		{
+			x--;
+			P = P + 2*y - 2*x + 1;
+		}
+		if (x < y){
+			break;
+		}
+		glVertex2d(x + x_centre, y + y_centre);
+		glVertex2d(-x + x_centre, y + y_centre);
+		glVertex2d(x + x_centre, -y + y_centre);
+		glVertex2d(-x + x_centre, -y + y_centre);
+		if (x != y)
+		{
+			glVertex2d(y + x_centre, x + y_centre);
+			glVertex2d(-y + x_centre, x + y_centre);
+			glVertex2d(y + x_centre, -x + y_centre);
+			glVertex2d(-y + x_centre, -x + y_centre);
+		}
+	}
+	glEnd();
+
+    glFlush();
+}
+void myInit (void)
+{
+    glClearColor(1.0, 1.0, 1.0, 0.0);
+    glColor3f(0.0f, 0.0f, 0.0f);
+    glPointSize(4.0);
+    glMatrixMode(GL_PROJECTION);
+    glLoadIdentity();
+    gluOrtho2D(-100.0, 640.0,-100.0, 480.0);
+}
+
+
+
+
+int main(int argc, char** argv)
+{
+
+
+    glutInit(&argc, argv);
+    glutInitDisplayMode (GLUT_SINGLE | GLUT_RGB);
+    glutInitWindowSize (640, 480);
+    glutInitWindowPosition (100, 150);
+    glutCreateWindow ("Bresenhams midpoint Algorithm");
+    cout<<"Initial Pixel: ";
+    cin>>x_centre>>y_centre;
+    cout<<"Radius: ";
+    cin>>r;
+
+    glutDisplayFunc(midPointCircleDraw);
+    myInit ();
+    glutMainLoop();
+
+}
+
